@@ -14,7 +14,8 @@ module ActiveMerchant
 
       RESOURCES = {
         :rates => 'ups.app/xml/Rate',
-        :track => 'ups.app/xml/Track'
+        :track => 'ups.app/xml/Track',
+        :address_validation_street_level => 'ups.app/xml/XAV'
       }
 
       PICKUP_CODES = HashWithIndifferentAccess.new({
@@ -119,6 +120,15 @@ module ActiveMerchant
         tracking_request = build_tracking_request(tracking_number, options)
         response = commit(:track, save_request(access_request + tracking_request), (options[:test] || false))
         parse_tracking_response(response, options)
+      end
+
+      def validate_street_level_address(location, options={})
+        options = @options.update(options)
+        access_request = build_access_request
+        address_validation_request = build_address_validation_street_level_request(location, options)
+        full_request = '<?xml version="1.0"?>' + access_request + '<?xml version="1.0"?>' + address_validation_request
+        response = commit(:address_validation_street_level, save_request(full_request), (options[:test] || false))
+        parse_address_validation_response(response, options)
       end
 
       protected
@@ -242,7 +252,29 @@ module ActiveMerchant
         end
         xml_request.to_s
       end
-
+      
+      def build_address_validation_street_level_request(location, options={})
+        xml_request = XmlNode.new('AddressValidationRequest') do |root_node|
+          root_node << XmlNode.new('Request') do |request|
+            request << XmlNode.new('TransactionReference') do |trans|
+              trans << XmlNode.new('CustomerContext')
+              trans << XmlNode.new('XpciVersion', '1.0001')
+            end
+            request << XmlNode.new('RequestAction', 'XAV')
+            request << XmlNode.new('RequestOption', '3')
+          end
+          root_node << XmlNode.new('MaximumListSize', options[:maximim_list_size] || 3)
+          root_node << XmlNode.new('AddressKeyFormat') do |addr|
+            addr << XmlNode.new('AddressLine', location.address1)
+            addr << XmlNode.new('PoliticalDivision2', location.city)
+            addr << XmlNode.new('PoliticalDivision1', location.state)
+            addr << XmlNode.new('PostcodePrimaryLow', location.zip)
+            addr << XmlNode.new('CountryCode', location.country_code(:alpha2))
+          end
+        end
+        xml_request.to_s
+      end
+      
       def build_location_node(name,location,options={})
         # not implemented:  * Shipment/Shipper/Name element
         #                   * Shipment/(ShipTo|ShipFrom)/CompanyName element
@@ -397,6 +429,13 @@ module ActiveMerchant
           :origin => origin,
           :destination => destination,
           :tracking_number => tracking_number)
+      end
+
+      def parse_address_validation_response response, options={}
+        document = Nokogiri::XML(response)
+        hash = Hash.from_xml(document.to_s)
+        # TODO move load resonse logic into this method to be consistent with what the rest of the methods here do
+        AddressValidationResponse.load_response(hash)
       end
 
       def location_from_address_node(address)

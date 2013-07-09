@@ -212,4 +212,36 @@ class UPSTest < Test::Unit::TestCase
     assert_not_equal prices_of.call(:fake_home_as_residential), prices_of.call(:fake_home_as_commercial)
     assert_not_equal prices_of.call(:fake_google_as_commercial), prices_of.call(:fake_google_as_residential)
   end
+
+  def test_validate_address_street_level_ambiguous
+    assert_nothing_raised do
+      response = @carrier.validate_street_level_address(@locations[:new_york_ambiguous])
+      expected_response = AddressValidationResponse.new true, ""
+      expected_response.valid_address = false
+      expected_response.candidates << ActiveMerchant::Shipping::Location.new({
+                                                                               address1: '350 AVENUE OF AMERICAS',
+                                                                               country: 'US',
+                                                                               zip: '10011',
+                                                                               state: 'NY',
+                                                                               city: 'NEW YORK'
+                                                                             })
+      expected_response.candidates << ActiveMerchant::Shipping::Location.new({
+                                                                               address1: '350 AVENUE OF AMERICAS',
+                                                                               address2: 'STE 1',
+                                                                               country: 'US',
+                                                                               zip: '10011',
+                                                                               state: 'NY',
+                                                                               city: 'NEW YORK'
+                                                                             })
+      expected_response.candidates << ActiveMerchant::Shipping::Location.new({
+                                                                               address1: '350 AVENUE OF AMERICAS',
+                                                                               country: 'US',
+                                                                               zip: '10011',
+                                                                               state: 'NY',
+                                                                               city: 'NEW YORK'
+                                                                             })
+
+      assert_equal expected_response, response
+    end
+  end
 end

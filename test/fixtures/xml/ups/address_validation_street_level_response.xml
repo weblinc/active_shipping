@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<AddressValidationResponse>
+  <Response>
+    <TransactionReference>
+      <XpciVersion>1.0001</XpciVersion>
+    </TransactionReference>
+    <ResponseStatusCode>1</ResponseStatusCode>
+    <ResponseStatusDescription>Success</ResponseStatusDescription>
+  </Response>
+  <AmbiguousAddressIndicator nil="true"/>
+  <AddressClassification>
+    <Code>1</Code>
+    <Description>Commercial</Description>
+  </AddressClassification>
+  <AddressKeyFormat type="array">
+    <AddressKeyFormat>
+      <AddressClassification>
+        <Code>1</Code>
+        <Description>Commercial</Description>
+      </AddressClassification>
+      <AddressLine>350 AVENUE OF AMERICAS</AddressLine>
+      <Region>NEW YORK NY 10011-8401</Region>
+      <PoliticalDivision2>NEW YORK</PoliticalDivision2>
+      <PoliticalDivision1>NY</PoliticalDivision1>
+      <PostcodePrimaryLow>10011</PostcodePrimaryLow>
+      <PostcodeExtendedLow>8401</PostcodeExtendedLow>
+      <CountryCode>US</CountryCode>
+    </AddressKeyFormat>
+    <AddressKeyFormat>
+      <AddressClassification>
+        <Code>0</Code>
+        <Description>Unknown</Description>
+      </AddressClassification>
+      <AddressLine type="array">
+        <AddressLine>350 AVENUE OF AMERICAS</AddressLine>
+        <AddressLine>STE 1</AddressLine>
+      </AddressLine>
+      <Region>NEW YORK NY 10011-8438</Region>
+      <PoliticalDivision2>NEW YORK</PoliticalDivision2>
+      <PoliticalDivision1>NY</PoliticalDivision1>
+      <PostcodePrimaryLow>10011</PostcodePrimaryLow>
+      <PostcodeExtendedLow>8438</PostcodeExtendedLow>
+      <CountryCode>US</CountryCode>
+    </AddressKeyFormat>
+    <AddressKeyFormat>
+      <AddressClassification>
+        <Code>1</Code>
+        <Description>Commercial</Description>
+      </AddressClassification>
+      <AddressLine>350 AVENUE OF AMERICAS</AddressLine>
+      <Region>NEW YORK NY 10011-8438</Region>
+      <PoliticalDivision2>NEW YORK</PoliticalDivision2>
+      <PoliticalDivision1>NY</PoliticalDivision1>
+      <PostcodePrimaryLow>10011</PostcodePrimaryLow>
+      <PostcodeExtendedLow>8438</PostcodeExtendedLow>
+      <CountryCode>US</CountryCode>
+    </AddressKeyFormat>
+  </AddressKeyFormat>
+</AddressValidationResponse>

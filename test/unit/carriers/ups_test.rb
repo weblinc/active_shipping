@@ -169,4 +169,36 @@ class UPSTest < Test::Unit::TestCase
     assert Package.new((150 * 16) + 0.01, [5,5,5], :units => :imperial).mass > @carrier.maximum_weight
     assert Package.new((150 * 16) - 0.01, [5,5,5], :units => :imperial).mass < @carrier.maximum_weight
   end
+
+  def test_validate_street_level
+    mock_response = xml_fixture('ups/address_validation_street_level_response')
+    @carrier.expects(:commit).returns(mock_response)
+    response = @carrier.validate_street_level_address(@locations[:new_york_ambiguous])
+    
+    expected_response = AddressValidationResponse.new true, ""
+    expected_response.valid_address = false
+    expected_response.candidates << ActiveMerchant::Shipping::Location.new({
+                                                                             address1: '350 AVENUE OF AMERICAS',
+                                                                             country: 'US',
+                                                                             zip: '10011',
+                                                                             state: 'NY',
+                                                                             city: 'NEW YORK'
+                                                                           })
+    expected_response.candidates << ActiveMerchant::Shipping::Location.new({
+                                                                             address1: '350 AVENUE OF AMERICAS',
+                                                                             address2: 'STE 1',
+                                                                             country: 'US',
+                                                                             zip: '10011',
+                                                                             state: 'NY',
+                                                                             city: 'NEW YORK'
+                                                                           })
+    expected_response.candidates << ActiveMerchant::Shipping::Location.new({
+                                                                             address1: '350 AVENUE OF AMERICAS',
+                                                                             country: 'US',
+                                                                             zip: '10011',
+                                                                             state: 'NY',
+                                                                             city: 'NEW YORK'
+                                                                           })
+    assert_equal expected_response, response
+  end
 end

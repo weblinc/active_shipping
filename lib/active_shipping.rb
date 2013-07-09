@@ -39,6 +39,7 @@ require 'active_utils'
 
 require 'active_shipping/shipping/base'
 require 'active_shipping/shipping/response'
+require 'active_shipping/shipping/address_validation_response'
 require 'active_shipping/shipping/rate_response'
 require 'active_shipping/shipping/tracking_response'
 require 'active_shipping/shipping/shipping_response'

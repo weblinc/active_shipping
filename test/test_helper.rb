@@ -198,7 +198,14 @@ module ActiveMerchant
                                       :country => 'NZ',
                                       :city => 'Auckland',
                                       :address1 => '192 Victoria St West',
-                                      :postal_code => '1010')
+                                      :postal_code => '1010'),
+
+        :new_york_ambiguous => Location.new(
+                                      :country => 'US',
+                                      :city => 'New York',
+                                      :state => 'NY',
+                                      :address1 => '350 Avenue',
+                                      :postal_code => '10001')
       }
 
       @@line_items1 = [
