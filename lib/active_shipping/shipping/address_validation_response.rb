@@ -17,8 +17,13 @@ module ActiveMerchant #:nodoc:
           avr.valid_address = response_hash['AddressValidationResponse'].has_key?('ValidAddressIndicator')
           if response_hash['AddressValidationResponse'].has_key?('AmbiguousAddressIndicator')
             candidates = []
-            response_hash['AddressValidationResponse']['AddressKeyFormat'].each do |candidate|
-              candidates << load_location(candidate)
+            response_candidates = response_hash['AddressValidationResponse']['AddressKeyFormat']
+            if response_candidates.kind_of? Hash # there is only one suggestion
+              candidates << load_location(response_candidates)
+            else # there are multiple suggestions
+              response_candidates.each do |candidate|
+                candidates << load_location(candidate)
+              end
             end
             avr.candidates = candidates
           end
