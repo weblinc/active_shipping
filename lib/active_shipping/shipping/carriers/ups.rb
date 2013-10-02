@@ -252,7 +252,7 @@ module ActiveMerchant
         end
         xml_request.to_s
       end
-      
+
       def build_address_validation_street_level_request(location, options={})
         xml_request = XmlNode.new('AddressValidationRequest') do |root_node|
           root_node << XmlNode.new('Request') do |request|
@@ -266,6 +266,7 @@ module ActiveMerchant
           root_node << XmlNode.new('MaximumListSize', options[:maximim_list_size] || 3)
           root_node << XmlNode.new('AddressKeyFormat') do |addr|
             addr << XmlNode.new('AddressLine', location.address1)
+            addr << XmlNode.new('AddressLine', location.address2)
             addr << XmlNode.new('PoliticalDivision2', location.city)
             addr << XmlNode.new('PoliticalDivision1', location.state)
             addr << XmlNode.new('PostcodePrimaryLow', location.zip)
@@ -274,7 +275,7 @@ module ActiveMerchant
         end
         xml_request.to_s
       end
-      
+
       def build_location_node(name,location,options={})
         # not implemented:  * Shipment/Shipper/Name element
         #                   * Shipment/(ShipTo|ShipFrom)/CompanyName element
